@@ -49,7 +49,6 @@ func (c *devChannel) open() error {
 
 func (c *devChannel) poll(data chan<- string) error {
 	defer close(c.done)
-	defer close(data)
 
 	// I don't think this is really correct,
 	// as it seems to wait until it times out

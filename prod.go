@@ -211,7 +211,6 @@ func (c *prodChannel) connect() error {
 
 func (c *prodChannel) poll(data chan<- string) error {
 	defer close(c.done)
-	defer close(data)
 	backoff := c.backoff
 
 	buf := new(bytes.Buffer)
@@ -331,6 +330,10 @@ func (c *prodChannel) poll(data chan<- string) error {
 			io.Copy(buf, resp.Body)
 			resp.Body.Close()
 			log.Printf("gaechannel: Poll error %d:\n%s", resp.StatusCode, buf.String())
+			switch resp.StatusCode {
+			case http.StatusBadRequest, http.StatusUnauthorized:
+				return ErrReauth
+			}
 			continue
 		}
 		if err := decode(resp.Body); err != nil {

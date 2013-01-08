@@ -1,6 +1,7 @@
 package gaechannel
 
 import (
+	"errors"
 	"strings"
 )
 
@@ -22,6 +23,10 @@ func newCommon(base, clientID, token string) *commonChannel {
 		Token:       token,
 	}
 }
+
+var (
+	ErrReauth = errors.New("gaechannel: please reauthenticate")
+)
 
 // A Channel represents an implementation of the Channel API.
 type Channel interface {
